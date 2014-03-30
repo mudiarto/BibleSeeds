@@ -5,11 +5,12 @@ It takes precedence over the config located in the boilerplate package.
 
 import os
 
-if os.environ['HTTP_HOST'] == "appengine.beecoss.com":
+#if os.environ['HTTP_HOST'] == "appengine.beecoss.com":
     # Load Boilerplate config only in http://appengine.beecoss.com
     # this code is here just for testing purposes
-    from config.boilerplate import config
-elif "SERVER_SOFTWARE" in os.environ:
+#    from config.boilerplate import config
+#elif "SERVER_SOFTWARE" in os.environ:
+if "SERVER_SOFTWARE" in os.environ:
     if os.environ['SERVER_SOFTWARE'].startswith('Dev'):
         from config.localhost import config
 

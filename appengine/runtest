@@ -1,0 +1,3 @@
+python testrunner.py ~/Projects/gae $*
+
+# require webtest, mock, pyquery

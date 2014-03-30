@@ -1,0 +1,5 @@
+#dev_appserver.py --high_replication --show_mail_body $* .
+#dev_appserver.py --high_replication --show_mail_body --require_indexes --address=0.0.0.0 $*  .
+#dev_appserver.py --high_replication --show_mail_body --require_indexes --use_sqlite $*  .
+#dev_appserver.py --show_mail_body --require_indexes --datastore_path=~/tmp/5korg.datastore $* .
+dev_appserver.py --show_mail_body --require_indexes --datastore_path=~/tmp/bibleseeds.datastore --smtp_host=localhost --smtp_port=8125 $* .

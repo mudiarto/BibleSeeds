@@ -1,0 +1,165 @@
+#!/usr/bin/env bundle exec guard start -i -d -B -w . -G
+
+interactor :off
+#
+# whisperk livereload guard
+# installation:
+#   rvm gemset create gae-dev
+#   rvm gemset use gae-dev
+#   gem install guard
+#   gem install guard-livereload
+#   gem install yajl-ruby
+#   gem install rb-fsevent
+#   then run guard on this directory
+
+#guard 'livereload', :apply_js_live=>false, :grace_period=>1.0 do
+  # whisperk javascript
+#  watch(%r{^client/whisperk-main/public/(javascripts/.+\.(js))$}) { |m| "/whisperk/main/#{m[1]}" }
+#  watch(%r{^client/whisperk-pro/public/(javascripts/.+\.(js))$}) { |m| "/whisperk/pro/#{m[1]}" }
+#  watch(%r{^(static/bootstrap/css/.+\.(css))$}) { |m| "/#{m[1]}" }
+
+
+  # original livereload
+  # watch(%r{app/views/.+\.(erb|haml|slim)$})
+  # watch(%r{app/helpers/.+\.rb})
+  # watch(%r{public/.+\.(css|js|html)})
+  # watch(%r{config/locales/.+\.yml})
+  ## Rails Assets Pipeline
+  # watch(%r{(app|vendor)/assets/\w+/(.+\.(css|js|html)).*})  { |m| "/assets/#{m[2]}" }
+#end
+
+# Add files and commands to this file, like the example:
+#   watch(%r{file/path}) { `command(s)` }
+#
+
+
+#notification :terminal_notifier
+notification :gntp
+
+
+group :test do
+  guard 'shell', :all_on_start => false do
+    watch(%r{^web\/(.*).py$}) do |m|
+      result = `./runtest web 1>&2`
+      puts result
+      if $?.to_i != 0 then
+        ::Guard::Notifier.notify result, :title=>"Failed to execute unit test", :image=>:failed
+      else
+        ::Guard::Notifier.notify result, :title=>"unit test completed"
+      end
+    end
+  end
+end
+
+#group :test do
+#  guard 'shell', :all_on_start => false do
+#    #watch(%r{^apps/(.*)(/(\w*.py)$}) { |m| `./runtest apps/#m[1]` }
+#    watch(%r{^apps\/(.*)\/([^\/]*.py)$}) do |m|
+#      # result = `./runtest apps/#{m[1]} 2>&1`
+#      result = `./runtest apps/#{m[1]} 1>&2`
+#      puts result
+#      if $?.to_i != 0 then
+#        #::Guard::Notifier.notify "Failed to execute test apps/#{m[1]}"
+#        #::Guard::Notifier::TerminalNotifier.notify "failed", "Failed to execute test apps/#{m[1]}", result, nil
+#        #::Guard::Notifier::GNTP.notify "failed", "Failed to execute test apps/#{m[1]}", result
+#        ::Guard::Notifier.notify result, :title=>"Failed to execute test apps/#{m[1]}", :image=>:failed
+#      else
+#        ::Guard::Notifier.notify result, :title=>"test apps/#{m[1]} completed"
+#      end
+#    end
+#  end
+#end
+#
+#
+#group :coffee do
+#    guard 'coffeescript', :input => 'static/static/coffee', :output => 'static/static/scripts'
+#end
+
+# instead of using less, use static/static/build.sh
+#guard 'less', :all_on_start => true, :all_after_change => true do
+#  watch(%r{^.+\.less$})
+#end
+#
+#group :less do
+#
+#    guard 'shell', :all_on_start => false do
+#
+#        # regular less files
+#        watch(%r{^static/less/([^\/]*)\.less$}) do |m|
+#            tgt = "static/less/#{m[1]}.less"
+#            dst = "static/css/#{m[1]}.css"
+#            cmd = "lessc #{tgt} > #{dst}"
+#            puts cmd
+#            result = `#{cmd}`
+#            if $?.to_i != 0 then
+#                ::Guard::Notifier.notify result, :title=>"Build #{tgt} failed", :image=>:failed
+#            else
+#                ::Guard::Notifier.notify result, :title=>"Build #{tgt} success"
+#            end
+#        end
+#
+#        # partials
+#        watch(%r{^static/less/partials/.*\.less$}) do |m|
+#            tgt = "static/less/style.less"
+#            dst = "static/css/style.css"
+#            cmd = "lessc #{tgt} > #{dst}"
+#            puts cmd
+#            result = `#{cmd}`
+#            if $?.to_i != 0 then
+#                ::Guard::Notifier.notify result, :title=>"Build #{tgt} failed", :image=>:failed
+#            else
+#                ::Guard::Notifier.notify result, :title=>"Build #{tgt} success"
+#            end
+#        end
+#
+#
+#        # regular bootmetro files
+#        watch(%r{^static/less/bootmetro/(.*\/)?.*\.less$}) do |m|
+#            tgts = ['bootmetro-icons-ie7', 'bootmetro-icons', 'bootmetro-ui-light', 'bootmetro']
+#            for t in tgts do
+#                tgt = "static/less/bootmetro/bootmetro/#{t}.less"
+#                dst = "static/css/bootmetro/#{t}.css"
+#                cmd = "lessc #{tgt} > #{dst}"
+#                puts cmd
+#                result = `#{cmd}`
+#                if $?.to_i != 0 then
+#                    ::Guard::Notifier.notify result, :title=>"Build #{tgt} failed", :image=>:failed
+#                else
+#                    ::Guard::Notifier.notify result, :title=>"Build #{tgt} success"
+#                end
+#            end
+#        end
+#
+#        watch(%r{^static/less/cosmo/(.*\/)?.*\.less$}) do |m|
+#            tgts = ['bootstrap', 'responsive', 'bootswatch']
+#            for t in tgts do
+#                tgt = "static/less/cosmo/#{t}.less"
+#                dst = "static/css/cosmo/#{t}.css"
+#                cmd = "lessc #{tgt} > #{dst}"
+#                puts cmd
+#                result = `#{cmd}`
+#                if $?.to_i != 0 then
+#                    ::Guard::Notifier.notify result, :title=>"Build #{tgt} failed", :image=>:failed
+#                else
+#                    ::Guard::Notifier.notify result, :title=>"Build #{tgt} success"
+#                end
+#            end
+#        end
+#
+#
+#    end
+#end
+#
+#group :reload do
+#    guard 'livereload', :apply_js_live=>false, :apply_css_live=>true, :grace_period=>1.0 do
+#        watch(%r{static/css/(.+\.(css|js))$}) do |m|
+#            puts "/css/#{m[1]}"
+#            "/css/#{m[1]}"
+#        end
+#    end
+#end
+#
+#
+#group :coffee do
+#    guard 'coffeescript', :input => 'static/coffee', :output => 'static/js'
+#end
